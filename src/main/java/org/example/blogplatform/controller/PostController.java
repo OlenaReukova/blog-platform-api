@@ -14,7 +14,7 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
     public PostController(PostService postService) {
-        this.postService =postService;
+        this.postService = postService;
     }
     @GetMapping
     public ResponseEntity<List<Post>> getAllPosts(){
