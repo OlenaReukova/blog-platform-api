@@ -16,3 +16,6 @@ export const getAllPosts = async (): Promise<Post[]> => {
        const response = await axios.post<Post>(API_BASE, post);
        return response.data;
 };
+    export const deletePost = async(id: string): Promise<void> => {
+        await axios.delete(`${API_BASE}/${id}`);
+    };

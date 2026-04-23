@@ -79,6 +79,19 @@ public class PostServiceTest {
         verify(postRepository, times(1)).save(post);
     }
 
+    @Test
+    void shouldDeletePostById() {
+        //given
+        String id = "123456";
+
+        //when
+        postService.deletePost(id);
+
+        //then
+        verify(postRepository, times(1)).deleteById(id);
+
+    }
+
 
 
 }

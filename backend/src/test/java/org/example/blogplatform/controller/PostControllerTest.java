@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 
 @WebMvcTest(PostController.class)
@@ -75,5 +76,16 @@ public class PostControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value("123456"))
                 .andExpect(jsonPath("$.title").value("New Post"));
+    }
+
+    @Test
+    void shouldDeletePostAndReturn204() throws Exception {
+        //given
+        String id = "123456";
+
+        //when + then
+        mockMvc.perform(delete("/api/posts/" + id))
+                .andExpect(status().isNoContent());
+
     }
 }
