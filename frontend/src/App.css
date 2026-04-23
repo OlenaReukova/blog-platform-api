@@ -1,0 +1,14 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, sans-serif; background: #f5f5f5; color: #333; }
+.app { max-width: 900px; margin: 0 auto; padding: 20px; }
+.app-header { margin-bottom: 24px; }
+.app-header h1 { font-size: 28px; }
+.posts-grid { display: grid; gap: 20px; }
+.post-card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.post-card h2 { font-size: 20px; margin-bottom: 12px; }
+.post-content { color: #555; line-height: 1.6; margin-bottom: 12px; }
+.post-meta { display: flex; gap: 16px; color: #888; font-size: 13px; margin-bottom: 12px; }
+.tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.tag { background: #ede9fe; color: #6d28d9; padding: 4px 10px; border-radius: 20px; font-size: 12px; }
+.loading, .empty, .error { text-align: center; padding: 40px; color: #888; }
+.error { color: #ef4444; }
