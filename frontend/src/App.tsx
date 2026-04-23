@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import type { Post } from './types';
-import { getAllPosts } from './api/posts';
+import { getAllPosts, deletePost } from './api/posts';
 import CreatePostForm from './components/CreatePostForm';
 import './App.css';
 
@@ -25,6 +25,15 @@ function App() {
   useEffect(() => {
     fetchPosts();
   }, []);
+
+  const handleDelete = async (id: string) => {
+    try {
+      await deletePost(id);
+      fetchPosts(); // обновляем список после удаления
+    } catch (err) {
+      setError('Failed to delete post');
+    }
+  };
 
   if (loading) return <div className="loading">Loading posts...</div>;
   if (error) return <div className="error">{error}</div>;
@@ -54,7 +63,15 @@ function App() {
             <div className="posts-grid">
               {posts.map(post => (
                   <div key={post.id} className="post-card">
+                    <div className="post-header">
                     <h2>{post.title}</h2>
+                      <button
+                          className="btn-danger"
+                          onClick={() => handleDelete(post.id)}
+                      >
+                        🗑️
+                      </button>
+                    </div>
                     <p className="post-content">{post.content}</p>
                     <div className="post-meta">
                       <span>👤 {post.author}</span>
