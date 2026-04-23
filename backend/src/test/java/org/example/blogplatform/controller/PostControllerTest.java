@@ -2,6 +2,7 @@ package org.example.blogplatform.controller;
 
 import org.example.blogplatform.model.Post;
 import org.example.blogplatform.service.PostService;
+import org.springframework.http.MediaType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -10,7 +11,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -45,5 +48,32 @@ public class PostControllerTest {
         mockMvc.perform(get("/api/posts"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isEmpty());
+    }
+
+    @Test
+    void shouldCreatePostAndReturn201() throws Exception {
+        //given
+        Post post = new Post();
+        post.setId("123456");
+        post.setTitle("New Post");
+        post.setAuthor("Alan Parker");
+        post.setContent("Content");
+
+        when(postService.createPost(any(Post.class))).thenReturn(post);
+
+        //when
+        mockMvc.perform(post("/api/posts")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                    {
+                        "title": "New Post",
+                        "author": "Alan Parker",
+                        "content": "Content",
+                        "tags": ["Design"]
+                    }
+                    """))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value("123456"))
+                .andExpect(jsonPath("$.title").value("New Post"));
     }
 }

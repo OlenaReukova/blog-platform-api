@@ -4,6 +4,7 @@ import org.example.blogplatform.model.Post;
 import org.example.blogplatform.repository.PostRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 @Service
 public class PostService {
@@ -15,5 +16,10 @@ public class PostService {
 
     public List<Post> getAllPosts() {
         return postRepository.findAll();
+    }
+
+    public Post createPost (Post post ) {
+        post.setCreatedAt(LocalDateTime.now());
+        return postRepository.save(post);
     }
 }

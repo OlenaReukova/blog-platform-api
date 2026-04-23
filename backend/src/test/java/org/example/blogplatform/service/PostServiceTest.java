@@ -61,4 +61,24 @@ public class PostServiceTest {
         verify(postRepository, times(1)).findAll();
     }
 
+    @Test
+    void shouldCreatePost(){
+        //given
+        Post post = new Post();
+        post.setTitle("New Post");
+        post.setAuthor("Alan Parker");
+        post.setContent("Content");
+
+        when(postRepository.save(any(Post.class))).thenReturn(post);
+
+        //when
+        Post result = postService.createPost(post);
+
+        //then
+        assertThat(result.getTitle()).isEqualTo("New Post");
+        verify(postRepository, times(1)).save(post);
+    }
+
+
+
 }

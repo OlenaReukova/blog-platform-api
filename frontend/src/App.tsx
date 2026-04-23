@@ -1,24 +1,28 @@
 import { useState, useEffect } from 'react';
 import type { Post } from './types';
 import { getAllPosts } from './api/posts';
+import CreatePostForm from './components/CreatePostForm';
 import './App.css';
 
 function App() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+
+  const fetchPosts = async () => {
+    try {
+      setLoading(true);
+      const data = await getAllPosts();
+      setPosts(data);
+    } catch (err) {
+      setError('Failed to load posts');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const data = await getAllPosts();
-        setPosts(data);
-      } catch (err) {
-        setError('Failed to load posts');
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchPosts();
   }, []);
 
@@ -29,7 +33,21 @@ function App() {
       <div className="app">
         <header className="app-header">
           <h1>📝 Blog Platform</h1>
+          <button
+              className="btn-primary"
+              onClick={() => setShowCreateForm(!showCreateForm)}
+          >
+            {showCreateForm ? 'Cancel' : '+ New Post'}
+          </button>
         </header>
+        {showCreateForm && (
+            <CreatePostForm
+                onPostCreated={() => {
+                  fetchPosts();
+                  setShowCreateForm(false);
+                }}
+            />
+        )}
         {posts.length === 0 ? (
             <div className="empty">No posts yet!</div>
         ) : (
