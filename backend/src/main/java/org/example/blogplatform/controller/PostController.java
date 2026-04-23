@@ -2,10 +2,9 @@ package org.example.blogplatform.controller;
 
 import org.example.blogplatform.model.Post;
 import org.example.blogplatform.service.PostService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,4 +19,9 @@ public class PostController {
     public ResponseEntity<List<Post>> getAllPosts(){
         return ResponseEntity.ok(postService.getAllPosts());
     }
+@PostMapping
+    public ResponseEntity<Post>createPost(@RequestBody Post post) {
+        Post created = postService.createPost(post);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+}
 }
