@@ -29,4 +29,11 @@ public class PostController {
         postService.deletePost(id);
         return ResponseEntity.noContent().build();
 }
+
+@PutMapping("/{id}")
+    public ResponseEntity<Post> updatePost(
+            @PathVariable("id") String id,
+            @RequestBody Post updatePost) {
+        return ResponseEntity.ok(postService.updatePost(id, updatePost));
+    }
 }
