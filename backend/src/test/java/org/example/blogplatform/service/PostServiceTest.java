@@ -1,5 +1,6 @@
 package org.example.blogplatform.service;
 
+import org.example.blogplatform.model.Comment;
 import org.example.blogplatform.model.Post;
 import org.example.blogplatform.repository.PostRepository;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
@@ -141,8 +143,25 @@ assertThat(result.getTitle()).isEqualTo("New title");
 verify(postRepository, times(1)).save(existing);
     }
 
+    @Test
+    void shouldAddComment() {
+        //given
+        Post post = new Post();
+        post.setId("123");
+        post.setTitle("New Post");
 
+        Comment comment = new Comment();
+        comment.setText("Good job!");
 
+        when(postRepository.findById("123")).thenReturn(Optional.of(post));
+        when(postRepository.save(any(Post.class))).thenReturn(post);
 
+        //when
+        Post result = postService.addComment("123", comment);
+
+        //then
+        assertThat(result.getComments()).hasSize(1);
+        assertThat(result.getComments().get(0).getText()).isEqualTo("Good job!");
+    }
 
 }

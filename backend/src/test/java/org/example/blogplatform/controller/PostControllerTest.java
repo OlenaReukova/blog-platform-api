@@ -1,5 +1,6 @@
 package org.example.blogplatform.controller;
 
+import org.example.blogplatform.model.Comment;
 import org.example.blogplatform.model.Post;
 import org.example.blogplatform.service.PostService;
 import org.springframework.http.MediaType;
@@ -12,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -121,5 +123,34 @@ public class PostControllerTest {
                     """))
         .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("New Post"));
+    }
+
+    @Test
+    void shouldAddCommentAndReturn200() throws Exception{
+        //given
+        Post post = new Post();
+        post.setId("123456");
+        post.setTitle("New Post");
+
+        Comment comment = new Comment();
+        comment.setText("Good job!");
+        comment.setAuthor("Nick");
+        post.getComments().add(comment);
+
+        when(postService.addComment(eq("123456"), any(Comment.class))).thenReturn(post);
+
+        //when + then
+
+        mockMvc.perform(post("/api/posts/123456/comments")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                    {
+                        "text": "Good job!",
+                        "author": "Nick"
+                    }
+                    """))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.comments[0].text").value("Good job!"))
+                .andExpect(jsonPath("$.comments[0].author").value("Nick"));
     }
 }
