@@ -19,6 +19,12 @@ public class PostController {
     public ResponseEntity<List<Post>> getAllPosts(){
         return ResponseEntity.ok(postService.getAllPosts());
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Post>getPostById(@PathVariable String id) {
+        return ResponseEntity.ok(postService.getPostById(id));
+    }
+
 @PostMapping
     public ResponseEntity<Post>createPost(@RequestBody Post post) {
         Post created = postService.createPost(post);

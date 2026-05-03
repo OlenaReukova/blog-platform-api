@@ -18,6 +18,10 @@ public class PostService {
         return postRepository.findAll();
     }
 
+    public Post getPostById(String id) {
+return postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post is not exist"));
+    }
+
     public Post createPost (Post post ) {
         post.setCreatedAt(LocalDateTime.now());
         return postRepository.save(post);
