@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -91,6 +92,30 @@ public class PostServiceTest {
         verify(postRepository, times(1)).deleteById(id);
 
     }
+
+    @Test
+    void shouldUpdatePost() {
+        //given
+        String id = "abc123";
+
+        Post existing = new Post();
+        existing.setId(id);
+        existing.setTitle("Old title");
+
+        Post updatedPost = new Post();
+        updatedPost.setTitle("New title");
+
+        when(postRepository.findById(id)).thenReturn(Optional.of(existing));
+        when(postRepository.save(existing)).thenReturn(existing);
+        //when
+        Post result = postService.updatePost(id, updatedPost);
+
+        //then
+assertThat(result.getTitle()).isEqualTo("New title");
+verify(postRepository, times(1)).save(existing);
+    }
+
+
 
 
 
