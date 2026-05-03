@@ -13,11 +13,9 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 
 @WebMvcTest(PostController.class)
@@ -27,6 +25,7 @@ public class PostControllerTest {
 
     @MockitoBean
     private PostService postService;
+
 
     @Test
     void shouldReturn200WithListOfPosts() throws Exception {
@@ -87,5 +86,27 @@ public class PostControllerTest {
         mockMvc.perform(delete("/api/posts/" + id))
                 .andExpect(status().isNoContent());
 
+    }
+    @Test
+    void shouldUpdatePostAndReturn200() throws Exception {
+        //given
+        Post post = new Post();
+        post.setId("abc123");
+        post.setTitle("New Post");
+
+      when(postService.updatePost(any(String.class), any(Post.class))).thenReturn(post);
+
+      //when+then
+        mockMvc.perform(put("/api/posts/abc123")
+            .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                    {
+                        "title": "Updated Title",
+                        "author": "Olena",
+                        "content": "Updated content"
+                    }
+                    """))
+        .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value("New Post"));
     }
 }
