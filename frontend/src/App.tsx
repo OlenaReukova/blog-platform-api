@@ -31,7 +31,7 @@ function App() {
   const handleDelete = async (id: string) => {
     try {
       await deletePost(id);
-      fetchPosts(); // обновляем список после удаления
+      fetchPosts();
     } catch (err) {
       setError('Failed to delete post');
     }
@@ -103,7 +103,6 @@ function App() {
                       </button>
                     </div>
 
-                    {/* Выпадающая секция */}
                     {openComments[post.id] && (
                         <div className="comments-section">
                           {post.comments.length > 0 && (
