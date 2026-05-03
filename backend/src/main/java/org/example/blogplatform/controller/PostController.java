@@ -1,5 +1,6 @@
 package org.example.blogplatform.controller;
 
+import org.example.blogplatform.model.Comment;
 import org.example.blogplatform.model.Post;
 import org.example.blogplatform.service.PostService;
 import org.springframework.http.HttpStatus;
@@ -42,4 +43,13 @@ public class PostController {
             @RequestBody Post updatePost) {
         return ResponseEntity.ok(postService.updatePost(id, updatePost));
     }
+
+    @PostMapping("/{id}/comments")
+    public ResponseEntity<Post> addComment(
+            @PathVariable String id,
+            @RequestBody Comment comment) {
+        return ResponseEntity.ok(postService.addComment(id, comment));
+    }
+
+
 }

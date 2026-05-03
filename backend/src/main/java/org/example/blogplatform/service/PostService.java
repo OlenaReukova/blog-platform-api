@@ -1,5 +1,6 @@
 package org.example.blogplatform.service;
 
+import org.example.blogplatform.model.Comment;
 import org.example.blogplatform.model.Post;
 import org.example.blogplatform.repository.PostRepository;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,12 @@ return postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post 
         existing.setContent(updatedPost.getContent());
         existing.setAuthor(updatedPost.getAuthor());
         existing.setTags(updatedPost.getTags());
+        return postRepository.save(existing);
+    }
+
+    public Post addComment(String id, Comment comment) {
+        Post existing = postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not exist"));
+        existing.getComments().add(comment);
         return postRepository.save(existing);
     }
 }
