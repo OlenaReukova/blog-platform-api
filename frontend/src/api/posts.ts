@@ -19,3 +19,14 @@ export const getAllPosts = async (): Promise<Post[]> => {
     export const deletePost = async(id: string): Promise<void> => {
         await axios.delete(`${API_BASE}/${id}`);
     };
+export const addComment = async (
+    postId: string,
+    comment: {text: string; author: string}
+): Promise<Post> => {
+    const response = await axios.post<Post>(
+        `${API_BASE}/${postId}/comments`,
+        comment
+    );
+    return response.data;
+};
+

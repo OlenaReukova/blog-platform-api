@@ -3,12 +3,14 @@ import type { Post } from './types';
 import { getAllPosts, deletePost } from './api/posts';
 import CreatePostForm from './components/CreatePostForm';
 import './App.css';
+import AddCommentForm from './components/AddCommentForm';
 
 function App() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [openComments, setOpenComments] = useState<{[key: string]: boolean}>({});
 
   const fetchPosts = async () => {
     try {
@@ -33,6 +35,13 @@ function App() {
     } catch (err) {
       setError('Failed to delete post');
     }
+  };
+
+  const toggleComments = (postId: string) => {
+    setOpenComments(prev => ({
+      ...prev,
+      [postId]: !prev[postId]
+    }));
   };
 
   if (loading) return <div className="loading">Loading posts...</div>;
@@ -84,9 +93,41 @@ function App() {
                           ))}
                         </div>
                     )}
+                    <div className="post-actions">
+                      <button
+                          className="btn-comments"
+                          onClick={() => toggleComments(post.id)}
+                      >
+                        💬 {post.comments.length} comment{post.comments.length !== 1 ? 's' : ''}
+                        {openComments[post.id] ? ' ▲' : ' ▼'}
+                      </button>
+                    </div>
+
+                    {/* Выпадающая секция */}
+                    {openComments[post.id] && (
+                        <div className="comments-section">
+                          {post.comments.length > 0 && (
+                              <>
+                                <div className="comments-title">
+                                  💬 {post.comments.length} comment{post.comments.length !== 1 ? 's' : ''}
+                                </div>
+                                {post.comments.map((comment, index) => (
+                                    <div key={index} className="comment">
+                                      <span className="comment-author">👤 {comment.author}</span>
+                                      <span className="comment-text">{comment.text}</span>
+                                    </div>
+                                ))}
+                              </>
+                          )}
+                    <AddCommentForm
+                        postId={post.id}
+                        onCommentAdded={fetchPosts}
+                    />
                   </div>
-              ))}
+              )}
             </div>
+              ))}
+      </div>
         )}
       </div>
   );
