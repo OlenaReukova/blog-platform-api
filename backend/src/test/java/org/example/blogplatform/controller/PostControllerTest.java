@@ -40,6 +40,19 @@ public class PostControllerTest {
     }
 
     @Test
+    void shouldReturn200WithPostFoundById() throws Exception {
+        //given
+        Post post = new Post();
+        post.setId("123");
+        when(postService.getPostById("123")).thenReturn(post);
+
+        //when then
+        mockMvc.perform(get("/api/posts/123"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value("123"));
+    }
+
+    @Test
     void shouldReturn200WithEmptyList() throws Exception {
         // given
         when(postService.getAllPosts()).thenReturn(List.of());
