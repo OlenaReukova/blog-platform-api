@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
 
@@ -49,6 +50,31 @@ public class PostServiceTest {
         // confirms your service actually used the repository
 
     }
+
+    @Test
+    void shouldReturnPostById() {
+        //given
+        Post post = new Post();
+        post.setId("123");
+        when(postRepository.findById("123")).thenReturn(Optional.of(post));
+
+        //when
+        Post result = postService.getPostById("123");
+
+        //then
+        assertThat(result.getId()).isEqualTo("123");
+    }
+
+    @Test
+    void shouldTrowExceptionWhenPostNotFound() {
+        //given
+        when(postRepository.findById("999")).thenReturn(Optional.empty());
+        //then
+        assertThatThrownBy(() -> postService.getPostById("999"))
+                .isInstanceOf(RuntimeException.class)
+                .hasMessageContaining("Post is not exist");
+    }
+
     @Test
     void shouldReturnEmptyListWhenNoPostsExist() {
         // given
