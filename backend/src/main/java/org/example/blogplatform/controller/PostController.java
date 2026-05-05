@@ -51,5 +51,9 @@ public class PostController {
         return ResponseEntity.ok(postService.addComment(id, comment));
     }
 
-
+@DeleteMapping("/{id}/comments/{commentId}")
+    public ResponseEntity<Void> deleteComment(@PathVariable String id, @PathVariable String commentId) {
+        postService.deleteComment(id, commentId);
+        return  ResponseEntity.noContent().build();
+}
 }
