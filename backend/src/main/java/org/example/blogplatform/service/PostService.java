@@ -46,4 +46,10 @@ return postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post 
         existing.getComments().add(comment);
         return postRepository.save(existing);
     }
+
+    public void deleteComment(String id, String commentId) {
+        Post existing = postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
+        existing.getComments().removeIf(comment -> comment.getId().equals(commentId));
+        postRepository.save(existing);
+    }
 }

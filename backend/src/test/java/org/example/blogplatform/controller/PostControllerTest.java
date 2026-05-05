@@ -14,6 +14,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -152,5 +153,16 @@ public class PostControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.comments[0].text").value("Good job!"))
                 .andExpect(jsonPath("$.comments[0].author").value("Nick"));
+    }
+
+    @Test
+    void shouldDeleteCommentAndReturn204() throws Exception {
+        //given
+        doNothing().when(postService).deleteComment("123456", "comment-123");
+
+        //when + then
+        mockMvc.perform(delete("/api/posts/123456/comments/comment-123"))
+                .andExpect(status().isNoContent());
+
     }
 }

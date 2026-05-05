@@ -164,4 +164,28 @@ verify(postRepository, times(1)).save(existing);
         assertThat(result.getComments().get(0).getText()).isEqualTo("Good job!");
     }
 
+    @Test
+    void shouldDeleteComment() {
+        //given
+        Comment comment = new Comment();
+        comment.setId("321");
+        comment.setText("Good job!");
+
+        Post post = new Post();
+        post.setId("123");
+        post.setTitle("New Post");
+        post.getComments().add(comment);
+
+        when(postRepository.findById("123")).thenReturn(Optional.of(post));
+        when(postRepository.save(any(Post.class))).thenReturn(post);
+
+        //when
+        postService.deleteComment("123", "321");
+
+        //then
+        assertThat(post.getComments()).isEmpty();
+        verify(postRepository, times(1)).save(post);
+    }
+
+
 }
